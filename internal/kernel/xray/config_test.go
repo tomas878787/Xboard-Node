@@ -1,6 +1,7 @@
 package xray
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
@@ -10,6 +11,7 @@ import (
 	"github.com/cedar2025/xboard-node/internal/kernel"
 	"github.com/cedar2025/xboard-node/internal/model"
 	"github.com/cedar2025/xboard-node/internal/panel"
+	"github.com/xtls/xray-core/infra/conf/serial"
 )
 
 var testKernelCfg = config.KernelConfig{
@@ -189,6 +191,21 @@ func TestBuildConfig_AllProtocols_ValidJSON(t *testing.T) {
 
 			t.Logf("config size: %d bytes", len(data))
 		})
+	}
+}
+
+func TestMarshalConfig_HTTPProxyInboundParsesAsXrayConfig(t *testing.T) {
+	nc := testNodeSpec(&panel.NodeConfig{
+		Protocol:   "http",
+		ServerPort: 8080,
+	})
+
+	data, err := marshalConfig(testKernelCfg, nc, testUsers, kernel.TLSCert{})
+	if err != nil {
+		t.Fatalf("marshalConfig() error = %v", err)
+	}
+	if _, err := serial.LoadJSONConfig(bytes.NewReader(data)); err != nil {
+		t.Fatalf("xray failed to parse generated HTTP proxy config: %v", err)
 	}
 }
 
