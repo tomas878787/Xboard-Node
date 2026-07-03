@@ -23,7 +23,6 @@ Thumbs.db
 vendor/
 config.json
 benchmark/
-third_party
 bench-results
 internal/kernel/singbox/config_bench_test.go
 internal/kernel/xray/config_bench_test.go

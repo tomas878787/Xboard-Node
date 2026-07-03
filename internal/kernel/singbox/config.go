@@ -960,7 +960,7 @@ func buildRealityConfig(nc *model.NodeSpec) M {
 		"tls_server_name", tls["server_name"],
 		"handshake", reality["handshake"],
 		"short_id", reality["short_id"],
-		"private_key_set", reality["private_key"],
+		"private_key_set", reality["private_key"] != nil,
 	)
 
 	tls["reality"] = reality
