@@ -909,6 +909,14 @@ func buildRealityConfig(nc *model.NodeSpec) M {
 	decoder, _ := mapstructure.NewDecoder(decoderConfig)
 	_ = decoder.Decode(nc.TLSSettings)
 
+	nlog.Core().Info("sing-box reality input",
+		"dest", settings.Dest,
+		"server_name", settings.ServerName,
+		"server_port", settings.ServerPort,
+		"short_id", settings.ShortID,
+		"private_key_set", settings.PrivateKey != "",
+	)
+
 	if settings.PrivateKey != "" {
 		reality["private_key"] = settings.PrivateKey
 	}
@@ -947,6 +955,13 @@ func buildRealityConfig(nc *model.NodeSpec) M {
 	if settings.ServerName != "" {
 		tls["server_name"] = settings.ServerName
 	}
+
+	nlog.Core().Info("sing-box reality generated",
+		"tls_server_name", tls["server_name"],
+		"handshake", reality["handshake"],
+		"short_id", reality["short_id"],
+		"private_key_set", reality["private_key"] != nil,
+	)
 
 	tls["reality"] = reality
 	return tls
